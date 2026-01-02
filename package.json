@@ -1,0 +1,31 @@
+{
+  "name": "mern-ecommerce-app",
+  "version": "1.0.0",
+  "description": "MERN E-commerce App",
+  "main": "server/server.js",
+  "scripts": {
+    "dev": "node --watch server/server.js",
+    "start": "node server/server.js"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shoaib4343/mern-ecommerce-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Shoaib4343/mern-ecommerce-app/issues"
+  },
+  "homepage": "https://github.com/Shoaib4343/mern-ecommerce-app#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "joi": "^18.0.2",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.1.1"
+  }
+}
