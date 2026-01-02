@@ -1,7 +1,7 @@
 import express from 'express';
 import { loginUserController, registerUserController } from '../controllers/auth.controller.js';
 import { validateMiddleware } from '../middlewares/joiValidate.middleware.js';
-import { loginSchema, registerSchema } from '../../validator/auth.validator.js';
+import { loginSchema, registerSchema } from '../validator/auth.validator.js';
 import { isAdmin, requireSignIn } from '../middlewares/auth.middleware.js';
 const router = express.Router();
 
