@@ -4,30 +4,24 @@
 
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
+
 import connectDB from "./config/db.js";
 import authRoutes from  "./routes/auth.route.js";
+import categoryRoutes from  "./routes/category.route.js";
 
-// Load environment variables from .env file
-dotenv.config();
-
-// Connect to MongoDB
-connectDB();
+dotenv.config();  // Load environment variables from .env file
+connectDB();   // Connect to MongoDB
 
 const app = express();
+const PORT = process.env.PORT || 5001;    // Define PORT from .env or fallback to 5001
 
-// Middleware to parse JSON bodies
-app.use(express.json());
+app.use(cors());            // Enable CORS for all routes
+app.use(express.json());    // Middleware to parse JSON bodies
 
-// Import and use authentication routes
+// Import and use routes
 app.use("/api/v1", authRoutes)
-
-// Define a simple test route
-app.get("/", (req, res) => {
-    res.send("Backend server is working...");
-});
-
-// Define PORT from .env or fallback to 5001
-const PORT = process.env.PORT || 5001;
+app.use("/api/v1", categoryRoutes)
 
 // Start the server
 app.listen(PORT, () => {
