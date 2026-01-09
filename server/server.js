@@ -9,6 +9,7 @@ import cors from "cors";
 import connectDB from "./config/db.js";
 import authRoutes from  "./routes/auth.route.js";
 import categoryRoutes from  "./routes/category.route.js";
+import productRoutes from "./routes/product.route.js"
 
 dotenv.config();  // Load environment variables from .env file
 connectDB();   // Connect to MongoDB
@@ -18,10 +19,12 @@ const PORT = process.env.PORT || 5001;    // Define PORT from .env or fallback t
 
 app.use(cors());            // Enable CORS for all routes
 app.use(express.json());    // Middleware to parse JSON bodies
+app.use("/image", express.static("uploads"))
 
 // Import and use routes
 app.use("/api/v1", authRoutes)
 app.use("/api/v1", categoryRoutes)
+app.use("/api/v1", productRoutes)
 
 // Start the server
 app.listen(PORT, () => {
