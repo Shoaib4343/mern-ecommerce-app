@@ -46,12 +46,14 @@ export const createProductController = async (req, res) => {
       image,
     });
 
-    await product.save();
+   const saveProduct =  await product.save();
+
+   const prodcutWithCategory = await productModel.findById(saveProduct._id).populate("category");
 
     res.status(201).json({
       success: true,
       message: "Product created successfully.",
-      product,
+      product: prodcutWithCategory,
     });
   } catch (error) {
     console.log("error ", error.message);
@@ -205,7 +207,7 @@ export const updateProductController = async (req, res) => {
     // If new image is uploaded
     if (req.file) {
       // Delete old image
-      const oldImagePath = path.join("uploads", existingProduct.image);
+      const oldImagePath = path.join("server/uploads", existingProduct.image);
       if (fs.existsSync(oldImagePath)) {
         fs.unlinkSync(oldImagePath);
       }
@@ -255,7 +257,7 @@ export const deleteProductController = async (req, res) => {
     };
 
     // Delete iamge
-    const imagePath = path.join("uploads",product.image);
+    const imagePath = path.join("server/uploads",product.image);
     if(fs.existsSync(imagePath)){
       fs.unlinkSync(imagePath);
     };
