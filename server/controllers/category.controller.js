@@ -120,7 +120,7 @@ export const updateCategoryController = async (req, res) => {
 // GET ALL CATEGORIES|| METHOD GET
 export const getAllCategoryController = async (req, res) => {
   try {
-    const categories = await categoryModel.find();
+    const categories = await categoryModel.find().sort({createdAt: -1});
     if (categories.length === 0) {
       return res.status(200).json({
         success: true,
