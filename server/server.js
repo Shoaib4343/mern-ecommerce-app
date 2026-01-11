@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 5001;    // Define PORT from .env or fallback t
 
 app.use(cors());            // Enable CORS for all routes
 app.use(express.json());    // Middleware to parse JSON bodies
-app.use("/image", express.static("uploads"))
+app.use("/image", express.static("server/uploads"))
 
 // Import and use routes
 app.use("/api/v1", authRoutes)
