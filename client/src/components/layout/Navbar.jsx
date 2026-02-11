@@ -5,6 +5,7 @@ import { Search, Heart, ShoppingCart, Menu, X, User, ChevronDown, LayoutDashboar
 import { useAuth } from "../../context/AuthContext";
 import toast from "react-hot-toast";
 import logo from "../../assets/images/logo.png";
+import { useAddToCart } from "../../context/AddToCartContext";
 
 const navLinkClass = ({ isActive }) =>
   isActive
@@ -15,10 +16,12 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDesktopDropdownOpen, setIsDesktopDropdownOpen] = useState(false);
   const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const { auth, setAuth } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const dropdownRef = useRef(null);
+  const {addToCart} = useAddToCart();
 
   // Close desktop dropdown when clicking outside
   useEffect(() => {
@@ -54,6 +57,15 @@ const Navbar = () => {
     setIsDesktopDropdownOpen(false);
     setIsMobileDropdownOpen(false);
     navigate("/login");
+  };
+
+  // Handle Search Submit (works for both Enter key and icon click)
+  const handleSearchSubmit = (e) => {
+    if (e) e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+    }
   };
 
   return (
@@ -99,14 +111,36 @@ const Navbar = () => {
 
         {/* Right Side - Icons and Buttons */}
         <div className="flex items-center gap-5">
-          {/* Search Icon */}
-          <button
+          {/* Search Input - Desktop Only */}
+          <form onSubmit={handleSearchSubmit} className="block">
+            <div className="relative">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search..."
+                className="w-48 pl-4 pr-10 py-2 border border-gray-200 text-sm text-gray-900 placeholder-gray-400 focus:border-gray-900 focus:outline-none transition-colors"
+              />
+              <button
+                type="submit"
+                onClick={handleSearchSubmit}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-900 transition-colors cursor-pointer"
+                aria-label="Submit search"
+              >
+                <Search size={18} strokeWidth={1.5} />
+              </button>
+            </div>
+          </form>
+
+          {/* Search Icon - Mobile Only */}
+          {/* <button
             type="button"
-            className="text-gray-600 hover:text-gray-900 transition-colors cursor-pointer"
+            onClick={() => navigate('/shop')}
+            className="md:hidden text-gray-600 hover:text-gray-900 transition-colors cursor-pointer"
             aria-label="Search"
           >
             <Search size={22} strokeWidth={1.5} />
-          </button>
+          </button> */}
 
           {/* Favorite Icon */}
           <button
@@ -119,13 +153,13 @@ const Navbar = () => {
 
           {/* Cart Icon with Badge */}
           <Link
-            to="/cart"
+            to="/add-to-cart"
             className="relative text-gray-600 hover:text-gray-900 transition-colors"
             aria-label="Cart"
           >
             <ShoppingCart size={22} strokeWidth={1.5} />
             <span className="absolute -top-2 -right-2 w-5 h-5 bg-gray-900 text-white text-xs font-medium rounded-full flex items-center justify-center">
-              2
+              {addToCart?.length > 9 ? "9+" : addToCart?.length || 0}
             </span>
           </Link>
 
@@ -224,10 +258,27 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation Menu */}
-      {isMenuOpen && (
-        <div className="lg:hidden border-t border-gray-100 bg-white">
-          <nav className="container-custom py-6 px-6">
+      {/* Mobile Navigation Menu - Slides from right */}
+      <div
+        className={`lg:hidden fixed inset-y-0 right-0 w-full max-w-sm bg-white border-l border-gray-100 shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${
+          isMenuOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        {/* Mobile Menu Header */}
+        <div className="flex items-center justify-between p-4 border-b border-gray-100">
+          <span className="text-lg font-medium text-gray-900">Menu</span>
+          <button
+            type="button"
+            onClick={() => setIsMenuOpen(false)}
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            aria-label="Close menu"
+          >
+            <X size={24} strokeWidth={1.5} />
+          </button>
+        </div>
+
+        <nav className="overflow-y-auto h-[calc(100vh-73px)]">
+          <div className="py-6 px-6">
             {/* Navigation Links */}
             <div className="flex flex-col gap-1 mb-6">
               <NavLink
@@ -363,8 +414,16 @@ const Navbar = () => {
                 </div>
               )}
             </div>
-          </nav>
-        </div>
+          </div>
+        </nav>
+      </div>
+
+      {/* Mobile Menu Backdrop */}
+      {isMenuOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black/50 z-40"
+          onClick={() => setIsMenuOpen(false)}
+        />
       )}
     </header>
   );
