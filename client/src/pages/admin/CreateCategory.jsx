@@ -18,6 +18,7 @@ import {
 } from "../../services/category.api";
 import { dateConverted } from "../../utils/date.uitls";
 import DeleteModal from "../../components/modal/DeleteModal";
+import { useNavigate } from "react-router-dom";
 
 const CreateCategory = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -27,6 +28,8 @@ const CreateCategory = () => {
   const [formData, setFormData] = useState({
     name: "",
   });
+
+  const navigate = useNavigate();
 
   // ========================================
   // DELETE MODAL STATE
@@ -251,7 +254,9 @@ const CreateCategory = () => {
             Create and manage product categories
           </p>
         </div>
-        <button className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 mb-4 transition-colors">
+        <button 
+         onClick={() => navigate("/admin/dashboard")}
+        className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 mb-4 transition-colors cursor-pointer">
           <ArrowLeft className="w-4 h-4" strokeWidth={1.5} />
           Back to Dashboard
         </button>
@@ -506,7 +511,7 @@ const CreateCategory = () => {
               <p className="text-sm text-gray-600">
                 <span>Showing {filteredCategories.length} of {categories.length} categories</span>
               </p>
-              <button className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors">
+              <button className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors cursor-pointer">
                 View all categories →
               </button>
             </div>
